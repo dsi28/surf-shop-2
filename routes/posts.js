@@ -14,7 +14,7 @@ const Post = require('../models/post'),
 
 router.get('/', postsIndex);
 
-router.get('/new', asyncErrorHandler(postsNew));
+router.get('/new', postsNew);
 
 router.post('/', asyncErrorHandler(postsCreate));
 

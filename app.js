@@ -2,7 +2,9 @@ const createError = require('http-errors'),
  express = require('express'),
  path = require('path'),
  cookieParser = require('cookie-parser'),
- logger = require('morgan');
+ logger = require('morgan'),
+ mongoose = require('mongoose'),
+ methodOverride = require('method-override');
 
 //models
 const indexRouter = require('./routes/index'),
@@ -11,6 +13,16 @@ const indexRouter = require('./routes/index'),
  reviewsRouter = require('./routes/reviews');
 
 const app = express();
+//db conncetion
+mongoose.connect('mongodb://localhost/surf-shop2', { 
+  useNewUrlParser: true,
+  useCreateIndex: true }); //changed db url from surf-shop to surf-shop-mapbox while in mapbox branch
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', ()=>{
+  console.log('Connected to db...');
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,7 +30,8 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

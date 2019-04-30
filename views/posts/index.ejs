@@ -1,1 +1,9 @@
 <h1>Post index</h1>
+<a href='/posts/new'>New</a>
+<%posts.forEach((post)=>{%>
+    <h3><a href='/posts/<%=post.id%>'><%=post.title%></a></h3>
+    <a href='/posts/<%=post.id%>/edit'>Edit</a>
+    <form method='POST' action='/posts/<%=post.id%>?_method=DELETE'>
+        <input type='submit' value='Delete'>
+    </form>
+<%})%>

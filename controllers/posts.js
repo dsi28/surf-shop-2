@@ -1,8 +1,9 @@
 const Post = require('../models/post');
 
 module.exports = {
-    postsIndex(req,res,next){
-        res.render(`posts/index`);
+    async postsIndex(req,res,next){
+        const posts = await Post.find({});
+        res.render(`posts/index`, {posts});
     },
     postsNew(req,res,next){
         res.render(`posts/new`)
@@ -28,6 +29,4 @@ module.exports = {
         post.remove();
         res.redirect(`/posts`);
     }
-
-
 };

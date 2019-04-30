@@ -1,10 +1,14 @@
+require('dotenv').config();
 const createError = require('http-errors'),
  express = require('express'),
  path = require('path'),
  cookieParser = require('cookie-parser'),
  logger = require('morgan'),
  mongoose = require('mongoose'),
- methodOverride = require('method-override');
+ methodOverride = require('method-override'),
+ engine = require('ejs-mate'),
+ {setLocalVariables} = require('./middleware'),
+ flash = require('connect-flash');
 
 //models
 const indexRouter = require('./routes/index'),
@@ -23,7 +27,10 @@ db.once('open', ()=>{
   console.log('Connected to db...');
 });
 
-
+//flash config before passport!!!
+app.use(flash());
+//ejs-mate config
+app.engine('ejs', engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -34,6 +41,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(require('express-session')({
+	secret: process.env.EXPRESS_SESSION_SECRET,
+	resave: false,
+	saveUninitialized: false
+}));
+
+//set local middleware method
+app.use(setLocalVariables);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

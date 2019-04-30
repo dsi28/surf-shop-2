@@ -2,25 +2,31 @@ const Post = require('../models/post');
 
 module.exports = {
     postsIndex(req,res,next){
-
+        res.render('/posts/index');
     },
-    postsNew(req,res,next){
-
+    async postsNew(req,res,next){
+        res.render('/posts/new')
     },
-    postsCreate(req,res,next){
-
+    async postsCreate(req,res,next){
+        const post = await Post.create(req.body.post);
+        res.redirect(`/posts/${post._id}`);
     },
-    postsEdit(req,res,next){
-
+    async postsEdit(req,res,next){
+        const post = await Post.findById(req.params.id);
+        res.render('/posts/edit', {post})
     },
-    postsUpdate(req,res,next){
-
+    async postsUpdate(req,res,next){
+        const post = await Post.findOneAndUpdate({_id: req.params.id},req.body.post);
+        res.redirect(`/posts/${post._id}`);
     },
-    postsShow(req,res,next){
-
+    async postsShow(req,res,next){
+        const post =  await Post.findById(req.params.id);
+        res.render(`/posts/show`, {post});
     },
-    postsDelete(req,res,next){
-
+    async postsDelete(req,res,next){
+        const post = await Post.findById(req.params.id);
+        post.remove();
+        res.redirect('/posts');
     }
 
 

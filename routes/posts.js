@@ -7,22 +7,23 @@ const Post = require('../models/post'),
  postsEdit,
  postsUpdate,
  postsShow,
- postsDelete} = require('../controllers/posts');
+ postsDelete} = require('../controllers/posts'),
+ {asyncErrorHandler} = require('../middleware');
 
         //routes for:  /posts
 
 router.get('/', postsIndex);
 
-router.get('/new', postsNew);
+router.get('/new', asyncErrorHandler(postsNew));
 
-router.post('/', postsCreate);
+router.post('/', asyncErrorHandler(postsCreate));
 
-router.get('/:id/edit', postsEdit);
+router.get('/:id/edit', asyncErrorHandler(postsEdit));
 
-router.put('/:id', postsUpdate);
+router.put('/:id', asyncErrorHandler(postsUpdate));
 
-router.get('/:id', postsShow);
+router.get('/:id', asyncErrorHandler(postsShow));
 
-router.delete('/:id', postsDelete);
+router.delete('/:id', asyncErrorHandler(postsDelete));
 
 module.exports = router;
